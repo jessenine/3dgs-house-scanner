@@ -1,22 +1,40 @@
 # Project Scope
 
+## Core Value
+Enable users to upload photos directly to cloud 3DGS services (Polycam, Luma AI, Splat3D) without local processing, getting a ready-to-view 3D map in <60 minutes.
+
+## Summary
+This initiative extends the 3DGS House Scanner to support direct photo upload to cloud processing services. Users select a service, upload their photo set via CLI or PowerShell interface, track progress, and download the resulting 3D Gaussian splat file. This bridges the gap for users who lack local GPU hardware or want maximum convenience.
+
 ## In Scope
-- PowerShell scripts for frame extraction (with relative path support)
-- Batch files as fallback (with SmartScreen workaround)
-- Nerfstudio integration with cu126 for Blackwell GPU support
-- Web front-end (index.html) with tool comparison and workflow guidance
-- Documentation (README-POWERSHELL.md, capture-guide.md)
-- GitHub repository for distribution
+- **e06s01**: Cloud service API integration - Connect to Polycam, Luma AI, Splat3D APIs for photo upload and status polling
+- **e06s02**: PowerShell upload tool - CLI tool with `-Service`, `-PhotoPath`, `-OutputPath` parameters for direct upload workflow
+- **e06s03**: Progress tracking - Real-time progress display with upload percentage, processing status, estimated completion time
 
 ## Out of Scope
-- Mobile application
-- Desktop GUI wrappers
-- Commercial hosting/processing service
-- Real-time capture pipeline
-- 2D floor plan extraction (future phase)
+- **Web-based upload form** - Not in this epic; requires separate front-end work (e09)
+- **Authentication flow** - User provides API tokens manually (future: e10 for credential manager)
+- **Automatic service selection** - User explicitly selects service via parameter
+- **Batch photo uploads** - Single scene per upload (future: e08)
+- **Video input** - Photos only; video must be pre-processed to frames (e01)
+- **Local processing fallback** - e02 handles local processing; e06 is cloud-only
 
 ## Constraints
-- Windows 10/11 host systems
-- Local processing: RTX 5060 12GB VRAM minimum
-- Cloud processing: Any browser with upload capability
-- Video format: MP4, MOV, AVI
+- **API access**: Requires user-provided API token for each service
+- **Photo limits**: Service-specific upload limits (Polycam: ~500 photos, Luma AI: ~200 photos)
+- **Output formats**: .ply (raw), .spz (compressed) - service-dependent
+- **Time limits**: Cloud processing typically 15-60 minutes depending on service and photo count
+- **Network**: Requires stable internet connection for upload (min 10 Mbps recommended)
+
+## Success Criteria
+- [ ] User can run `.\upload.ps1 -Service polycam -PhotoPath C:\photos -OutputPath C:\output`
+- [ ] Upload completes with progress display (percentage and estimated time)
+- [ ] Processed 3D model downloaded automatically after service processing completes
+- [ ] Output file is valid .ply or .spz format
+- [ ] Error messages guide user on missing API tokens or invalid service selection
+
+## References
+- Project Vision: `specs/product/VISION_LATEST.yaml`
+- Tech Stack: `specs/tech-architecture/tech-stack.md`
+- Cloud Services Comparison: `index.html` (e03 - already complete)
+- Local Processing: `specs/epics/e02-nerfstudio-integration/` (e02 - already complete)
