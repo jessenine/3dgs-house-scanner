@@ -4,11 +4,11 @@
 solo-git
 
 ## Active Flow
-discover (epics sliced, ready for plan-work)
+build-epic (e02: Nerfstudio integration - ready for implementation)
 
 ## Git State
 - Branch: main
-- Commit: ceb7d51 (epic capsules)
+- Commit: a99daa0 (plan-work complete)
 - Changes: none
 
 ## Epic State
@@ -17,8 +17,8 @@ discover (epics sliced, ready for plan-work)
 - Blocked Epics: (none)
 
 ## Handoff
-- Previous Skill: slice-tasks
-- Next Skill: plan-work
+- Previous Skill: plan-work
+- Next Skill: kickoff-branch
 - Reviewer: (none)
 
 ## Metrics
@@ -33,8 +33,11 @@ discover (epics sliced, ready for plan-work)
 - [x] Release plan
 - [x] Epic capsules with stories (e01-e05)
 - [x] Story task files with verify commands
+- [x] Story spec files with implementation steps
+- [x] All tasks marked 'failing' status for TDD
 
 ## Next Steps
-1. Run `plan-work` to write detailed implementation tasks
-2. Begin `develop-tdd` for active epic (e02s01: Nerfstudio installation)
-3. Write story spec files in countable-story-format
+1. Run `kickoff-branch` to create feature branch for e02
+2. Run `develop-tdd` for first failing story (e02s01)
+3. Implement and verify each task
+4. Run `verify-work` when all tasks pass
