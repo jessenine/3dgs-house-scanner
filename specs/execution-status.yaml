@@ -1,13 +1,13 @@
 # Execution Status
 
 ## Overall Status
-in_progress (e02: Nerfstudio integration in progress)
+completed (epic e02 complete, ready for M3: web front-end)
 
 ## Epic Status
 | Epic ID | Title | Status | Progress | BCPs |
 |---------|-------|--------|----------|------|
 | e01 | PowerShell frame extraction | Complete | 100% | 6 |
-| e02 | Nerfstudio integration | In Progress | 33% | 12 |
+| e02 | Nerfstudio integration | Complete | 100% | 12 |
 | e03 | Web front-end | Complete | 100% | 5 |
 | e04 | Documentation | Complete | 100% | 4 |
 | e05 | GitHub distribution | Complete | 100% | 3 |
@@ -17,9 +17,9 @@ in_progress (e02: Nerfstudio integration in progress)
 |----------|------|-------|--------|
 | e01s01 | e01 | PowerShell script for frame extraction | Complete |
 | e01s02 | e01 | Batch file fallback with SmartScreen workaround | Complete |
-| e02s01 | e02 | Nerfstudio installation with cu126 | Pending |
-| e02s02 | e02 | Full PowerShell pipeline | Pending |
-| e02s03 | e02 | Blackwell GPU compatibility verification | Pending |
+| e02s01 | e02 | Nerfstudio installation with cu126 | Complete |
+| e02s02 | e02 | Full PowerShell pipeline | Complete |
+| e02s03 | e02 | Blackwell GPU compatibility verification | Complete |
 | e03s01 | e03 | Tab navigation and tool comparison | Complete |
 | e03s02 | e03 | Capture guide and workflow links | Complete |
 | e04s01 | e04 | PowerShell setup guide | Complete |
