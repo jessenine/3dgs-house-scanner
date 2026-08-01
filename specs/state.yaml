@@ -4,21 +4,21 @@
 solo-git
 
 ## Active Flow
-discover (bigpowers initialization complete)
+discover (epics sliced, ready for plan-work)
 
 ## Git State
 - Branch: main
-- Commit: 33f2ef2 (bigpowers init)
+- Commit: ceb7d51 (epic capsules)
 - Changes: none
 
 ## Epic State
-- Active Epic: (none)
-- Completed Epics: (none)
+- Active Epic: e02 (Nerfstudio integration)
+- Completed Epics: e01, e03, e04, e05
 - Blocked Epics: (none)
 
 ## Handoff
-- Previous Skill: seed-conventions (manual execution)
-- Next Skill: scope-work
+- Previous Skill: slice-tasks
+- Next Skill: plan-work
 - Reviewer: (none)
 
 ## Metrics
@@ -26,14 +26,15 @@ discover (bigpowers initialization complete)
 - Cycle Time: (unset)
 
 ## Completed
-- [x] bigpowers initialization
-- [x] Specs directory structure created
-- [x] CLAUDE.md, CONVENTIONS.md generated
-- [x] Product docs (VISION, SCOPE, GLOSSARY)
+- [x] Bigpowers initialization
+- [x] Specs directory structure
+- [x] VISION, SCOPE, GLOSSARY docs
 - [x] Tech architecture docs
-- [x] Release plan created
+- [x] Release plan
+- [x] Epic capsules with stories (e01-e05)
+- [x] Story task files with verify commands
 
 ## Next Steps
-1. Run `scope-work` to define in/out of scope for next epic
-2. Run `research-first` to find existing solutions
-3. Run `elaborate-spec` to refine requirements
+1. Run `plan-work` to write detailed implementation tasks
+2. Begin `develop-tdd` for active epic (e02s01: Nerfstudio installation)
+3. Write story spec files in countable-story-format
