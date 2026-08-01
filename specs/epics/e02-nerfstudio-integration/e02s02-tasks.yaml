@@ -10,7 +10,7 @@ Full PowerShell Pipeline (Process → Train → Export)
 6
 
 ## Status
-failing
+done
 
 ## Tasks
 
@@ -27,7 +27,7 @@ failing
   Test-Path C:\output\data\sparse
   ```
 - **Risk**: P1
-- **Status**: failing
+- **Status**: done
 
 ### Task: Train model script
 - **ID**: e02s02t02
@@ -42,7 +42,7 @@ failing
     --load-config ""
   ```
 - **Risk**: P1
-- **Status**: failing
+- **Status**: done
 
 ### Task: Export PLY script
 - **ID**: e02s02t03
@@ -56,7 +56,7 @@ failing
   Test-Path C:\output\point_cloud\iteration_30000\point_cloud.ply
   ```
 - **Risk**: P2
-- **Status**: failing
+- **Status**: done
 
 ## Acceptance Criteria
 - [ ] Process data script accepts input/output paths

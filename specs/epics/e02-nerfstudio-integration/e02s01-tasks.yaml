@@ -10,7 +10,7 @@ Nerfstudio Installation with cu126
 5
 
 ## Status
-failing
+done
 
 ## Tasks
 
@@ -27,7 +27,7 @@ failing
   pip install -e nerfstudio
   ```
 - **Risk**: P1
-- **Status**: failing
+- **Status**: done
 
 ### Task: COLMAP installation
 - **ID**: e02s01t02
@@ -39,7 +39,7 @@ failing
   colmap --help
   ```
 - **Risk**: P2
-- **Status**: failing
+- **Status**: done
 
 ## Acceptance Criteria
 - [ ] Creates virtual environment with `python -m venv gs-env`
