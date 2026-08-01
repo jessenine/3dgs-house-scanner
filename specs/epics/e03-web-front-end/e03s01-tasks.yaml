@@ -1,0 +1,66 @@
+# Story: Tab Navigation and Tool Comparison
+
+## Story ID
+e03s01
+
+## Title
+Tab Navigation and Tool Comparison
+
+## BCPs
+3
+
+## Status
+Complete ✅
+
+## Tasks
+
+### Task: Tab-based navigation
+- **ID**: e03s01t01
+- **Description**: Create tab interface for Home, Cloud Services, Local Processing sections
+- **Verify**:
+  ```html
+  <!-- Manual verification -->
+  1. Click "Cloud Services" tab → Shows cloud tool comparison
+  2. Click "Local Processing" tab → Shows PowerShell commands
+  3. Click "Home" tab → Shows project overview
+  ```
+- **Status**: Complete
+
+### Task: Cloud service comparison table
+- **ID**: e03s01t02
+- **Description**: Create table comparing Polycam, Luma AI, Splat3D, MakeSplat
+- **Verify**:
+  ```html
+  <!-- Check table columns -->
+  - Service Name
+  - Upload Method
+  - Processing Time
+  - Output Formats
+  - Price
+  - Link
+  ```
+- **Status**: Complete
+
+### Task: Clickable links to services
+- **ID**: e03s01t03
+- **Description**: Add "View Service" buttons that open external links
+- **Verify**:
+  ```html
+  <!-- Check link targets -->
+  <a href="https://polycam.com" target="_blank">Polycam</a>
+  <a href="https://lumalabs.ai" target="_blank">Luma AI</a>
+  <a href="https://splat3d.ai" target="_blank">Splat3D</a>
+  ```
+- **Status**: Complete
+
+## Acceptance Criteria
+- [x] Three tabs (Home, Cloud Services, Local Processing)
+- [x] Clicking tabs shows correct content
+- [x] Cloud service comparison table with 6+ services
+- [x] Each service has clickable "View Service" link
+- [x] Links open in new tab (target="_blank")
+
+## Notes
+- No external dependencies (single file)
+- Responsive design with CSS flexbox
+- No JavaScript framework needed

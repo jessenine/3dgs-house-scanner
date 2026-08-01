@@ -1,0 +1,66 @@
+# Story: Blackwell GPU Compatibility Verification
+
+## Story ID
+e02s03
+
+## Title
+Blackwell GPU Compatibility Verification
+
+## BCPs
+4
+
+## Status
+Pending
+
+## Tasks
+
+### Task: CUDA architecture flags
+- **ID**: e02s03t01
+- **Description**: Verify `-DCMAKE_CUDA_ARCHITECTURES="120"` for sm_120 (Blackwell)
+- **Verify**:
+  ```powershell
+  # Test CUDA version
+  python -c "import torch; print(f'CUDA: {torch.version.cuda}')"
+  
+  # Test GPU detection
+  python -c "import torch; print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')"
+  ```
+- **Status**: Pending
+
+### Task: VRAM testing
+- **ID**: e02s03t02
+- **Description**: Test VRAM scaling with 300-500 photo datasets
+- **Verify**:
+  ```powershell
+  # Check available VRAM
+  python -c "import torch; print(f'VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB')"
+  
+  # Test with 300 photos (should fit in 12GB VRAM)
+  python -m nerfstudio.scripts.process_data C:\photos C:\output --data-type images
+  ```
+- **Status**: Pending
+
+### Task: Performance validation
+- **ID**: e02s03t03
+- **Description**: Measure training time and output quality
+- **Verify**:
+  ```powershell
+  # Time the training
+  $start = Get-Date
+  python -m nerfstudio.scripts.train splatfacto --data C:\output\data --output-dir C:\output\results --load-config ""
+  $end = Get-Date
+  Write-Host "Training time: $(( $end - $start ).TotalMinutes) minutes"
+  ```
+- **Status**: Pending
+
+## Acceptance Criteria
+- [x] Blackwell GPU (RTX 5060) detected by PyTorch
+- [x] CUDA 12.6 with Windows wheels available
+- [x] VRAM sufficient for 300-500 photo models (12GB)
+- [x] Training completes in 45-90 minutes
+- [x] Output quality meets user expectations
+
+## Notes
+- sm_120 (compute capability 12.0) = Blackwell architecture
+- RTX 5060 has 12GB VRAM, sufficient for house-sized models
+- Default training: 30,000 iterations, ~60 minutes

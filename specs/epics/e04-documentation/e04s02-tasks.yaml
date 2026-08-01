@@ -1,0 +1,67 @@
+# Story: Capture Guidelines
+
+## Story ID
+e04s02
+
+## Title
+Capture Guidelines
+
+## BCPs
+2
+
+## Status
+Complete ✅
+
+## Tasks
+
+### Task: Photo count and overlap
+- **ID**: e04s02t01
+- **Description**: Document recommended 300-500 photos with 60-70% overlap
+- **Verify**:
+  ```markdown
+  # Check guidelines:
+  - Photo count: 300-500 for full house
+  - Overlap: 60-70% between frames
+  - Walk-through paths: multiple heights
+  ```
+- **Status**: Complete
+
+### Task: Camera settings
+- **ID**: e04s02t02
+- **Description**: Document recommended camera settings (ISO, shutter, no HDR)
+- **Verify**:
+  ```markdown
+  # Check settings:
+  - ISO: 100-400 (low noise)
+  - Shutter: ~1/60s (consistent exposure)
+  - No HDR (static exposure)
+  - Aperture: f/8-f/11 (good depth of field)
+  ```
+- **Status**: Complete
+
+### Task: Lighting recommendations
+- **ID**: e04s02t03
+- **Description**: Document lighting conditions for best results
+- **Verify**:
+  ```markdown
+  # Check lighting:
+  - Avoid direct sunlight (shadows)
+  - Consistent lighting throughout
+  - Overcast days preferred
+  - Turn off flashing lights
+  ```
+- **Status**: Complete
+
+## Acceptance Criteria
+- [x] Photo count recommendation documented (300-500)
+- [x] Overlap percentage specified (60-70%)
+- [x] Camera settings documented (ISO, shutter, aperture)
+- [x] Lighting conditions explained
+- [x] Multi-height walk-through path recommendation
+- [x] Avoid HDR and moving objects
+
+## Notes
+- Too few photos (<200) → Poor reconstruction
+- Too much overlap (>90%) → Slower processing
+- Inconsistent lighting → Ghosting artifacts
+- HDR can cause misalignment

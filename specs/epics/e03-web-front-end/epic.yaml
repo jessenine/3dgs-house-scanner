@@ -1,0 +1,37 @@
+# Epic: Web Front-End
+
+## Summary
+Web-based interface for tool comparison, capture guidance, and workflow navigation. Single-file HTML with tabs and interactive checklists.
+
+## Epic Details
+- **ID**: e03
+- **WSJF**: 8
+- **Status**: Complete ✅
+- **Story Count**: 2
+- **Total BCPs**: 5
+
+## Stories
+| Story ID | Title | BCPs | Status |
+|----------|-------|------|--------|
+| e03s01 | Tab navigation and tool comparison | 3 | Complete |
+| e03s02 | Capture guide and workflow links | 2 | Complete |
+
+## Delivery
+- **File**: `index.html` with inline CSS/JS
+- **Features**: Tabs, checklists, clickable links
+- **Hosting**: GitHub Pages (future)
+
+## Verification
+```html
+<!-- Manual verification -->
+1. Open index.html in browser
+2. Switch between tabs (Home, Cloud Services, Local Processing)
+3. Verify checklist items are clickable
+4. Test "View Service" links open new tabs
+```
+
+## Notes
+- Single-file HTML avoids server requirements
+- Inline CSS/JS for portability
+- Cloud service comparison table (Polycam, Luma AI, Splat3D)
+- Local processing workflow with PowerShell commands

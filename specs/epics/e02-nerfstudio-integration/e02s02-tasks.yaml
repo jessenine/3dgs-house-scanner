@@ -1,0 +1,69 @@
+# Story: Full PowerShell Pipeline
+
+## Story ID
+e02s02
+
+## Title
+Full PowerShell Pipeline (Process → Train → Export)
+
+## BCPs
+6
+
+## Status
+Pending
+
+## Tasks
+
+### Task: Process data script
+- **ID**: e02s02t01
+- **Description**: Create script to run COLMAP SfM processing on input images
+- **Verify**:
+  ```powershell
+  # Test with photo folder
+  python -m nerfstudio.scripts.process_data C:\photos C:\output --data-type images
+  
+  # Verify output structure
+  Test-Path C:\output\data\images
+  Test-Path C:\output\data\sparse
+  ```
+- **Status**: Pending
+
+### Task: Train model script
+- **ID**: e02s02t02
+- **Description**: Create script to train splatfacto model
+- **Verify**:
+  ```powershell
+  # Test training (with reduced iterations for testing)
+  python -m nerfstudio.scripts.train splatfacto `
+    --data C:\output\data `
+    --output-dir C:\output\results `
+    --max-num-iterations 1000 `
+    --load-config ""
+  ```
+- **Status**: Pending
+
+### Task: Export PLY script
+- **ID**: e02s02t03
+- **Description**: Create script to export trained model to PLY format
+- **Verify**:
+  ```powershell
+  # Test export
+  python -m nerfstudio.scripts.export --load-config C:\output\results\config.yml --output-path C:\output\point_cloud
+  
+  # Verify output
+  Test-Path C:\output\point_cloud\iteration_30000\point_cloud.ply
+  ```
+- **Status**: Pending
+
+## Acceptance Criteria
+- [x] Process data script accepts input/output paths
+- [x] Process creates COLMAP sparse point cloud and camera poses
+- [x] Train script runs splatfacto model
+- [x] Export creates PLY file with correct path structure
+- [x] All scripts handle errors with clear messages
+- [x] Documentation in README-POWERSHELL.md
+
+## Notes
+- Full training takes 45-90 minutes for 300-500 photos
+- Training web server available at http://localhost:7562
+- PLY output: 100-500MB, viewable in SuperSplat

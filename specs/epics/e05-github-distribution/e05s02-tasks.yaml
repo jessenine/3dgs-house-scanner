@@ -1,0 +1,56 @@
+# Story: .gitignore for Large Files
+
+## Story ID
+e05s02
+
+## Title
+.gitignore for Large Files
+
+## BCPs
+1
+
+## Status
+Complete ✅
+
+## Tasks
+
+### Task: Create .gitignore
+- **ID**: e05s02t01
+- **Description**: Create .gitignore to exclude large files and build artifacts
+- **Verify**:
+  ```bash
+  # Check .gitignore contents
+  grep -E "MP4|MOV|avi|venv|__pycache__" .gitignore
+  
+  # Should include patterns:
+  # *.mp4, *.mov, *.avi, *.mkv (video files)
+  # gs-env/, venv/, env/, .venv/ (virtual environments)
+  # __pycache__/ (Python cache)
+  # output/, results/, point_cloud/, frames/ (build outputs)
+  ```
+- **Status**: Complete
+
+### Task: Large file warning
+- **ID**: e05s02t02
+- **Description**: Document Git LFS recommendation for large files
+- **Verify**:
+  ```markdown
+  # Check documentation:
+  - IMG_0471.MOV (93.69 MB) triggered GitHub warning
+  - Recommendation: use Git LFS for large video files
+  - Current: video excluded, users download separately
+  ```
+- **Status**: Complete
+
+## Acceptance Criteria
+- [x] .gitignore created with all patterns
+- [x] Video formats excluded (*.mp4, *.mov, *.avi, *.mkv)
+- [x] Virtual environments excluded (gs-env/, venv/, etc.)
+- [x] Python cache excluded (__pycache__/)
+- [x] Output folders excluded (output/, results/, frames/, point_cloud/)
+- [x] Git LFS recommendation documented
+
+## Notes
+- Video files large (93.69 MB warning) - exclude from git
+- Users download video separately or use their own footage
+- Git LFS recommended for teams needing large file tracking

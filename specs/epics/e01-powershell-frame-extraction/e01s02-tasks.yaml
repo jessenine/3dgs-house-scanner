@@ -1,0 +1,54 @@
+# Story: Batch File Fallback with SmartScreen Workaround
+
+## Story ID
+e01s02
+
+## Title
+Batch File Fallback with SmartScreen Workaround
+
+## BCPs
+3
+
+## Status
+Complete ✅
+
+## Tasks
+
+### Task: Batch file frame extraction
+- **ID**: e01s02t01
+- **Description**: Create `extract-frames.bat` with proper error handling and path validation
+- **Verify**:
+  ```cmd
+  # Test 1: Extract frames
+  extract-frames.bat "video.mp4" "frames"
+  
+  # Test 2: Missing arguments check
+  extract-frames.bat
+  
+  # Test 3: Non-existent file check
+  extract-frames.bat "nonexistent.mp4" "frames"
+  ```
+- **Status**: Complete
+
+### Task: Windows SmartScreen workaround documentation
+- **ID**: e01s02t02
+- **Description**: Document PowerShell alternative and Unblock-File command in README
+- **Verify**:
+  ```powershell
+  # Verify SmartScreen fix is documented
+  Get-Content README-POWERSHELL.md | Select-String "Unblock-File"
+  ```
+- **Status**: Complete
+
+## Acceptance Criteria
+- [x] Batch file accepts two arguments (video path, output folder)
+- [x] Validates video file exists before ffmpeg call
+- [x] Converts relative paths to absolute paths using `for %%I in ("%VIDEO%") do set "VIDEO_ABS=%%~fI"`
+- [x] Creates output directory if missing
+- [x] Reports clear error messages with usage examples
+- [x] Documentation includes PowerShell alternative and SmartScreen fix
+
+## Notes
+- Batch files may be blocked by SmartScreen on Windows
+- PowerShell alternative is the preferred method
+- SmartScreen can be bypassed with `Get-ChildItem *.bat | Unblock-File`

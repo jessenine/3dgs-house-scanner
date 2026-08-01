@@ -1,0 +1,57 @@
+# Story: PowerShell Script for Frame Extraction
+
+## Story ID
+e01s01
+
+## Title
+PowerShell Script for Frame Extraction
+
+## BCPs
+3
+
+## Status
+Complete ✅
+
+## Tasks
+
+### Task: PowerShell frame extraction script
+- **ID**: e01s01t01
+- **Description**: Create `extract-frames.ps1` with mandatory parameters, relative path support, and automatic ffmpeg installation
+- **Verify**: 
+  ```powershell
+  # Test 1: Extract frames from video
+  .\extract-frames.ps1 -VideoPath "video.mp4" -OutputPath "frames"
+  
+  # Test 2: Check error handling for missing file
+  .\extract-frames.ps1 -VideoPath "nonexistent.mp4" -OutputPath "frames"
+  
+  # Test 3: Verify relative path conversion
+  Test-Path (Get-Command .\extract-frames.ps1).Path
+  ```
+- **Status**: Complete
+
+### Task: PowerShell provider path handling
+- **ID**: e01s01t02
+- **Description**: Handle `Microsoft.PowerShell.Core\FileSystem::\\server\path` format for UNC paths
+- **Verify**:
+  ```powershell
+  # Test with UNC path (from PowerShell provider context)
+  $path = "Microsoft.PowerShell.Core\FileSystem::\\tower.local\share\video.mp4"
+  $parts = $path -split "::", 2
+  $parts[1] -eq "\\tower.local\share\video.mp4"
+  ```
+- **Status**: Complete
+
+## Acceptance Criteria
+- [x] Script accepts `-VideoPath` and `-OutputPath` as mandatory parameters
+- [x] Handles relative paths (current directory and `..`)
+- [x] Handles UNC paths via PowerShell provider path conversion
+- [x] Automatically installs ffmpeg via winget if missing
+- [x] Reports clear errors with usage examples
+- [x] Extracts frames at 4 FPS (1 frame every 0.25s)
+- [x] Creates output directory if missing
+
+## Notes
+- Final output: Frames saved as `frame_0001.jpg`, `frame_0002.jpg`, etc.
+- Uses ffmpeg `-vf "fps=4"` for consistent frame extraction rate
+- Video file validation before ffmpeg invocation

@@ -1,0 +1,38 @@
+# Epic: Documentation
+
+## Summary
+Comprehensive documentation for PowerShell commands, capture guidelines, and troubleshooting. README-POWERSHELL.md and capture-guide.md.
+
+## Epic Details
+- **ID**: e04
+- **WSJF**: 7
+- **Status**: Complete ✅
+- **Story Count**: 2
+- **Total BCPs**: 4
+
+## Stories
+| Story ID | Title | BCPs | Status |
+|----------|-------|------|--------|
+| e04s01 | PowerShell setup guide | 2 | Complete |
+| e04s02 | Capture guidelines | 2 | Complete |
+
+## Delivery
+- **README-POWERSHELL.md**: Full PowerShell setup with troubleshooting
+- **capture-guide.md**: Photo capture recommendations
+
+## Verification
+```bash
+# Verify documentation exists
+test -f README-POWERSHELL.md
+test -f capture-guide.md
+
+# Check PowerShell guide has:
+# - conda workaround
+# - SmartScreen fix
+# - RTX 5060 note
+```
+
+## Notes
+- README-POWERSHELL.md replaces batch file usage
+- PowerShell commands avoid "conda not recognized" errors
+- SmartScreen workaround using `Unblock-File` or Properties → Unblock

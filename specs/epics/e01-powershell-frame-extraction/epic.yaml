@@ -1,0 +1,40 @@
+# Epic: PowerShell Frame Extraction
+
+## Summary
+Create PowerShell scripts that extract frames from video footage for 3DGS training. Supports relative paths, error handling, and automatic ffmpeg installation.
+
+## Epic Details
+- **ID**: e01
+- **WSJF**: 10
+- **Status**: Complete ✅
+- **Story Count**: 2
+- **Total BCPs**: 6
+
+## Stories
+| Story ID | Title | BCPs | Status |
+|----------|-------|------|--------|
+| e01s01 | PowerShell script for frame extraction | 3 | Complete |
+| e01s02 | Batch file fallback with SmartScreen workaround | 3 | Complete |
+
+## Delivery
+- **Script**: `extract-frames.ps1` - PowerShell implementation with relative path support
+- **Fallback**: `extract-frames.bat` - Batch file with full path conversion
+- **Output**: Frames extracted at 4 FPS (1 frame every 0.25s)
+
+## Verification
+```powershell
+# Test with relative paths
+.\extract-frames.ps1 -VideoPath "video.mp4" -OutputPath "frames"
+
+# Test with absolute paths
+.\extract-frames.ps1 -VideoPath "C:\photos\video.mp4" -OutputPath "C:\photos\frames"
+
+# Test batch fallback
+extract-frames.bat "video.mp4" "frames"
+```
+
+## Notes
+- Both scripts support relative paths (current directory and `..`)
+- PowerShell provider path support (UNC paths like `\\tower.local\share\...`)
+- Automatic ffmpeg installation via winget
+- Clear error messages with usage examples

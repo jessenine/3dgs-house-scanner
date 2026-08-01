@@ -1,0 +1,48 @@
+# Epic: Nerfstudio Integration
+
+## Summary
+Integrate Nerfstudio for 3D Gaussian Splatting training with cu126 support for Blackwell (RTX 5060) GPUs. Full pipeline from photo processing to PLY export.
+
+## Epic Details
+- **ID**: e02
+- **WSJF**: 10
+- **Status**: In Progress
+- **Story Count**: 3
+- **Total BCPs**: 12
+
+## Stories
+| Story ID | Title | BCPs | Status |
+|----------|-------|------|--------|
+| e02s01 | Nerfstudio installation with cu126 | 5 | Pending |
+| e02s02 | Full PowerShell pipeline (process → train → export) | 6 | Pending |
+| e02s03 | Blackwell GPU compatibility verification | 4 | Pending |
+
+## Delivery
+- **Install**: `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126`
+- **Process**: `python -m nerfstudio.scripts.process_data C:\photos C:\output --data-type images`
+- **Train**: `python -m nerfstudio.scripts.train splatfacto --data C:\output\data --output-dir C:\output\results`
+- **Export**: `python -m nerfstudio.scripts.export --load-config C:\output\results\config.yml --output-path C:\output\point_cloud`
+
+## Verification
+```powershell
+# 1. Install with cu126
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+
+# 2. Process photos
+python -m nerfstudio.scripts.process_data C:\photos C:\output --data-type images
+
+# 3. Train model
+python -m nerfstudio.scripts.train splatfacto --data C:\output\data --output-dir C:\output\results --load-config ""
+
+# 4. Export PLY
+python -m nerfstudio.scripts.export --load-config C:\output\results\config.yml --output-path C:\output\point_cloud
+
+# 5. Verify Blackwell GPU
+python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}, GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')"
+```
+
+## Notes
+- cu126 required for Blackwell (RTX 5060) Windows support
+- cu121 and cu124 lack Windows wheels accessible via pip
+- 12GB VRAM sufficient for 300-500 photo house models
+- Training time: 45-90 minutes for full house

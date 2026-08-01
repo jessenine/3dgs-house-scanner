@@ -1,0 +1,35 @@
+# Epic: GitHub Distribution
+
+## Summary
+Set up GitHub repository for distribution, including README, .gitignore, and release workflow.
+
+## Epic Details
+- **ID**: e05
+- **WSJF**: 5
+- **Status**: Complete ✅
+- **Story Count**: 2
+- **Total BCPs**: 3
+
+## Stories
+| Story ID | Title | BCPs | Status |
+|----------|-------|------|--------|
+| e05s01 | Repository setup | 2 | Complete |
+| e05s02 | .gitignore for large files | 1 | Complete |
+
+## Delivery
+- **Repository**: https://github.com/jessenine/3dgs-house-scanner
+- **.gitignore**: Exclude large files, venv, output folders
+
+## Verification
+```bash
+# Check repository exists
+curl -s https://api.github.com/repos/jessenine/3dgs-house-scanner | jq -r '.html_url'
+
+# Check .gitignore
+grep -E "MP4|MOV|avi|frames" .gitignore
+```
+
+## Notes
+- Large video file excluded from git (93.69 MB warning triggered)
+- Use .gitignore pattern: `*.mp4`, `*.mov`, `*.avi`
+- Output folders: `output/`, `results/`, `frames/`

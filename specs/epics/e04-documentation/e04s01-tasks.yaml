@@ -1,0 +1,83 @@
+# Story: PowerShell Setup Guide
+
+## Story ID
+e04s01
+
+## Title
+PowerShell Setup Guide
+
+## BCPs
+2
+
+## Status
+Complete ✅
+
+## Tasks
+
+### Task: PowerShell README
+- **ID**: e04s01t01
+- **Description**: Create README-POWERSHELL.md with full setup guide
+- **Verify**:
+  ```markdown
+  # Check sections:
+  - PowerShell commands (no batch files)
+  - SmartScreen warning and fix
+  - RTX 5060 note with cu126
+  - Quick start steps 0-6
+  - Troubleshooting section
+  ```
+- **Status**: Complete
+
+### Task: Troubleshooting section
+- **ID**: e04s01t02
+- **Description**: Document common errors and solutions
+- **Verify**:
+  ```markdown
+  # Check troubleshooting:
+  - "conda: The term 'conda' is not recognized" → Use venv instead
+  - "python: The term 'python' is not recognized" → Use py instead
+  - "SmartScreen blocked an app" → Unblock-File command
+  - Training slow/out of VRAM → Reduce photo count
+  - "Could not find torch" → Use cu126 index
+  ```
+- **Status**: Complete
+
+### Task: Full pipeline documentation
+- **ID**: e04s01t03
+- **Description**: Document complete command sequence
+- **Verify**:
+  ```powershell
+  # Verify all commands documented:
+  # 1. Create venv
+  python -m venv gs-env
+  .\gs-env\Scripts\Activate.ps1
+  
+  # 2. Install PyTorch
+  pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+  
+  # 3. Process photos
+  python -m nerfstudio.scripts.process_data C:\photos C:\output --data-type images
+  
+  # 4. Train
+  python -m nerfstudio.scripts.train splatfacto --data C:\output\data --output-dir C:\output\results --load-config ""
+  
+  # 5. Export
+  python -m nerfstudio.scripts.export --load-config C:\output\results\config.yml --output-path C:\output\point_cloud
+  
+  # 6. View
+  Start-Process "https://superspl.at/editor"
+  ```
+- **Status**: Complete
+
+## Acceptance Criteria
+- [x] README-POWERSHELL.md created with all sections
+- [x] SmartScreen warning and fix documented
+- [x] RTX 5060 cu126 note included
+- [x] Troubleshooting section with 6+ common errors
+- [x] Full pipeline commands documented
+- [x] Step-by-step instructions (Steps 0-6)
+
+## Notes
+- PowerShell commands avoid batch file issues
+- conda is not required (uses `python -m venv`)
+- cu126 required for Blackwell Windows support

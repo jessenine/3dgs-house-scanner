@@ -1,23 +1,31 @@
 # Execution Status
 
 ## Overall Status
-not_started
+in_progress (e02: Nerfstudio integration in progress)
 
 ## Epic Status
-| Epic ID | Status | Progress |
-|---------|--------|----------|
-| e01 | not_started | 0% |
-| e02 | not_started | 0% |
-| e03 | not_started | 0% |
-| e04 | not_started | 0% |
-| e05 | not_started | 0% |
+| Epic ID | Title | Status | Progress | BCPs |
+|---------|-------|--------|----------|------|
+| e01 | PowerShell frame extraction | Complete | 100% | 6 |
+| e02 | Nerfstudio integration | In Progress | 33% | 12 |
+| e03 | Web front-end | Complete | 100% | 5 |
+| e04 | Documentation | Complete | 100% | 4 |
+| e05 | GitHub distribution | Complete | 100% | 3 |
 
 ## Story Status
-| Story ID | Epic | Status | Assignee |
-|----------|------|--------|----------|
-| (none) | (none) | (none) | (none) |
+| Story ID | Epic | Title | Status |
+|----------|------|-------|--------|
+| e01s01 | e01 | PowerShell script for frame extraction | Complete |
+| e01s02 | e01 | Batch file fallback with SmartScreen workaround | Complete |
+| e02s01 | e02 | Nerfstudio installation with cu126 | Pending |
+| e02s02 | e02 | Full PowerShell pipeline | Pending |
+| e02s03 | e02 | Blackwell GPU compatibility verification | Pending |
+| e03s01 | e03 | Tab navigation and tool comparison | Complete |
+| e03s02 | e03 | Capture guide and workflow links | Complete |
+| e04s01 | e04 | PowerShell setup guide | Complete |
+| e04s02 | e04 | Capture guidelines | Complete |
+| e05s01 | e05 | Repository setup | Complete |
+| e05s02 | e05 | .gitignore for large files | Complete |
 
 ## Blocking Issues
-| Issue ID | Description | Impact |
-|----------|-------------|--------|
-| (none) | (none) | (none) |
+None
