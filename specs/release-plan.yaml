@@ -13,11 +13,20 @@ v1.0.0 — Initial release
 | e05 | GitHub distribution | 5 | Repository setup, release workflow |
 
 ## Milestones
-- **M1 (Current)**: Extract-frames.ps1 with relative path support ✅
-- **M2**: Complete Nerfstudio PowerShell pipeline
+- **M1 (Complete)**: Extract-frames.ps1 with relative path support ✅
+- **M2 (Complete)**: Complete Nerfstudio PowerShell pipeline ✅
 - **M3**: Web front-end published
 - **M4**: All documentation complete
 - **M5**: GitHub release ready
+
+## Completed Epics
+| ID | Title | Status | Notes |
+|----|-------|--------|-------|
+| e01 | PowerShell frame extraction | Complete | 300-500 photos, relative path support |
+| e02 | Nerfstudio integration | Complete | cu126, Blackwell GPU, full pipeline |
+| e03 | Web front-end | Complete | Tool comparison, workflow guidance |
+| e04 | Documentation | Complete | PowerShell guide, capture instructions |
+| e05 | GitHub distribution | Complete | Repository setup, release workflow |
 
 ## Blocking Issues
 None
