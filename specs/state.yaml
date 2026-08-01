@@ -8,34 +8,34 @@ develop-tdd (e02-nerfstudio-integration branch)
 
 ## Git State
 - Branch: e02-nerfstudio-integration
-- Commit: 0e844a2 (GREEN - implementation complete)
+- Commit: 06a3626 (GREEN - e02s02 complete)
 - Working Tree: clean (after commits)
 
 ## Epic State
 - Active Epic: e02 (Nerfstudio integration)
-- Active Story: e02s01 (COMPLETE)
-- Remaining Stories: e02s02, e02s03
+- Active Story: e02s02 (COMPLETE)
+- Completed: e02s01, e02s02
+- Remaining: e02s03
 
 ## Handoff
-- Previous Skill: develop-tdd (RED → GREEN completed)
-- Next Skill: develop-tdd (next story: e02s02)
+- Previous Skill: develop-tdd (e02s02 RED → GREEN)
+- Next Skill: develop-tdd (e02s03)
 - Reviewer: (none)
 
 ## Metrics
-- Story e02s01: COMPLETE
-- Tests: 27/27 passing
-- Commits: 2 (test-only RED + implementation GREEN)
+- Story e02s01: COMPLETE (27/27 tests)
+- Story e02s02: COMPLETE (45/45 tests)
+- Commits: 4 (2 stories × 2 commits each)
 
-## Completed (e02s01)
-- [x] install-nerfstudio.sh created
-- [x] Virtual environment creation
-- [x] PyTorch cu126 installation
-- [x] Nerfstudio editable install
-- [x] GPU verification
-- [x] Test suite (27 tests, all passing)
-- [x] Two-commit TDD workflow (RED → GREEN)
+## Completed (e02s02)
+- [x] process-data.sh with COLMAP SfM
+- [x] train.sh with splatfacto model
+- [x] export.sh with PLY output
+- [x] Test suite (45 tests, all passing)
+- [x] VRAM estimation
+- [x] Input validation and error handling
 
 ## Next Steps
-1. Continue with e02s02 (Full PowerShell pipeline)
-2. Implement process-data.ps1, train.ps1, export.ps1
-3. Run tests after each behavior
+1. Continue with e02s03 (Blackwell GPU verification)
+2. Verify CUDA version and GPU detection
+3. Test on Windows with actual RTX 5060
