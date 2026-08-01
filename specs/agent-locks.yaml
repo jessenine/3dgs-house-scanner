@@ -22,5 +22,7 @@
 - story_id: e02s03
   locked_by: agent: develop-tdd
   locked_at: 2026-08-01T20:30:00Z
-  files_touched: []
-  status: active
+  files_touched:
+    - verify-gpu.sh
+    - test_verify-gpu.sh
+  status: complete
