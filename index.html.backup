@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Gaussian Splatting — House Scanner</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --card-bg: #12121c;
+      --card-border: #2a2a3d;
+      --accent: #6c5ce7;
+      --accent-light: #a29bfe;
+      --text: #e2e2f0;
+      --text-dim: #9090b0;
+      --green: #00e676;
+      --orange: #ffa726;
+      --red: #ef5350;
+      --font-mono: 'Courier New', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Animated background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(108, 92, 231, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(0, 230, 118, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 3rem 0 2.5rem;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-light), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    header .subtitle {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+    }
+
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.8rem;
+      color: var(--accent-light);
+    }
+
+    /* ── Sections ── */
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    section h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    section h2 .icon {
+      font-size: 1.4rem;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+      color: var(--accent-light);
+    }
+
+    .card p {
+      color: var(--text-dim);
+      font-size: 0.92rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card code {
+      background: #1a1a2e;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--green);
+      font-family: var(--font-mono);
+    }
+
+    /* ── Steps ── */
+    .steps {
+      counter-reset: step;
+    }
+
+    .step {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+      margin-bottom: 0.8rem;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .step:hover { border-color: var(--accent); }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 1rem;
+      top: 1.2rem;
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .step h4 {
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .step p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    .step pre {
+      background: #0d0d18;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      margin-top: 0.6rem;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .step pre code {
+      background: none;
+      padding: 0;
+      color: var(--green);
+      font-family: var(--font-mono);
+    }
+
+    /* ── Table ── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #1a1a2e;
+      padding: 0.7rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent-light);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-dim);
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(108, 92, 231, 0.04); }
+
+    /* ── Action buttons ── */
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.2rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #5a4bd1);
+      color: white;
+      box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(108, 92, 231, 0.5);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 15px rgba(108, 92, 231, 0.15);
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    /* ── Checkboxes ── */
+    .checklist label {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.4rem 0;
+      cursor: pointer;
+      font-size: 0.92rem;
+    }
+
+    .checklist input[type="checkbox"] {
+      accent-color: var(--accent);
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── Status bar ── */
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.8rem;
+    }
+
+    .status-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .status-item .label {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.3rem;
+    }
+
+    .status-item .value {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .status-item .value.green { color: var(--green); }
+    .status-item .value.orange { color: var(--orange); }
+
+    /* ── Comparison stars ── */
+    .stars { color: var(--orange); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 2rem;
+    }
+
+    /* ── Nav tabs ── */
+    .nav-tabs {
+      display: flex;
+      gap: 0.3rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.3rem;
+      margin-bottom: 2rem;
+      overflow-x: auto;
+    }
+
+    .nav-tab {
+      flex: 1;
+      min-width: fit-content;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover { color: var(--text); }
+
+    .nav-tab.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── Collapsible ── */
+    details {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    details[open] summary { border-bottom: 1px solid var(--card-border); }
+
+    summary {
+      padding: 0.9rem 1.2rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: '▸'; transition: transform 0.2s; }
+    details[open] summary::before { transform: rotate(90deg); }
+
+    .details-content {
+      padding: 1rem 1.2rem;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    .details-content code {
+      background: #1a1a2e;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.83rem;
+      color: var(--green);
+      font-family: var(--font-mono);
+    }
+
+    /* ── Clickable URL in code ── */
+    .url-link {
+      color: var(--accent-light);
+      text-decoration: underline;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .url-link:hover { color: var(--green); }
+
+    .service-link {
+      color: var(--accent-light);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--accent-light);
+      cursor: pointer;
+    }
+    .service-link:hover { color: var(--green); border-color: var(--green); }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.7rem; }
+      .container { padding: 1rem; }
+      .step { padding-left: 3rem; }
+      .step::before { left: 0.8rem; }
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card, .step, .status-item, .actions .btn {
+      animation: fadeInUp 0.4s ease-out backwards;
+    }
+
+    .card:nth-child(2) { animation-delay: 0.05s; }
+    .card:nth-child(3) { animation-delay: 0.1s; }
+    .step:nth-child(2) { animation-delay: 0.05s; }
+    .step:nth-child(3) { animation-delay: 0.1s; }
+    .step:nth-child(4) { animation-delay: 0.15s; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ── Header ── -->
+  <header>
+    <h1>🏠 3D House Scanner</h1>
+    <p class="subtitle">Photogrammetry &amp; 3D Gaussian Splatting — Windows 11 Setup</p>
+    <div class="badge-row">
+      <span class="badge">🖥️ Skadoosh</span>
+      <span class="badge">🎮 RTX 5060 12GB</span>
+      <span class="badge">⚡ Ryzen 7 3800x</span>
+      <span class="badge">💾 32 GB RAM</span>
+    </div>
+  </header>
+
+  <!-- ── Navigation ── -->
+  <div class="nav-tabs" id="navTabs">
+    <button class="nav-tab active" onclick="showTab('setup')">⚡ Setup</button>
+    <button class="nav-tab" onclick="showTab('capture')">📸 Capture</button>
+    <button class="nav-tab" onclick="showTab('hardware')">🖥️ Hardware</button>
+    <button class="nav-tab" onclick="showTab('tools')">🛠️ Tools</button>
+    <button class="nav-tab" onclick="showTab('viewer')">👁️ View</button>
+    <button class="nav-tab" onclick="showTab('formats')">📦 Formats</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB: Setup -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="tab-content active" id="tab-setup">
+
+    <!-- Status -->
+    <section>
+      <h2><span class="icon">📊</span> System Readiness</h2>
+      <div class="status-grid">
+        <div class="status-item">
+          <div class="label">GPU</div>
+          <div class="value green">RTX 5060 ✅</div>
+        </div>
+        <div class="status-item">
+          <div class="label">VRAM</div>
+          <div class="value green">12 GB ✅</div>
+        </div>
+        <div class="status-item">
+          <div class="label">Est. Train Time</div>
+          <div class="value orange">45–90 min</div>
+        </div>
+        <div class="status-item">
+          <div class="label">Arch</div>
+          <div class="value green">Blackwell ✅</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two paths -->
+    <section>
+      <h2><span class="icon">🚀</span> Choose Your Path</h2>
+
+      <div class="card" style="border-left: 3px solid var(--green);">
+        <h3>⚡ Easy Path: OpenSplat (Recommended)</h3>
+        <p>One binary. One command. No dependencies.</p>
+        <div class="step">
+          <h4>1. Download OpenSplat</h4>
+          <p>Get the Windows installer:</p>
+          <pre><a href="https://github.com/pierotofy/OpenSplat/releases" target="_blank" class="url-link" style="color: var(--green); text-decoration: none;">📥 github.com/pierotofy/OpenSplat/releases</a></pre>
+        </div>
+        <div class="step">
+          <h4>2. Capture &amp; Run</h4>
+          <pre><code>"C:\Program Files\OpenSplat\opensplat.exe" --input "C:\photos\*.jpg" --output "C:\output\house.ply"</code></pre>
+        </div>
+        <div class="step">
+          <h4>3. View</h4>
+          <p>Open the result in <a href="https://superspl.at/editor" target="_blank" style="color: var(--accent-light);">SuperSplat Editor</a></p>
+        </div>
+      </div>
+
+      <div class="card" style="border-left: 3px solid var(--accent);">
+        <h3>🔧 Flexible Path: Nerfstudio</h3>
+        <p>Full pipeline. More control. CLI-based.</p>
+        <div class="steps">
+          <div class="step">
+            <h4>1. Install dependencies</h4>
+            <pre><code>C:\Users\shade\pidev_proj\install-nerfstudio.bat</code></pre>
+          </div>
+          <div class="step">
+            <h4>2. Capture photos</h4>
+            <p>See the <a href="#tab-capture" onclick="showTab('capture')" style="color: var(--accent-light); cursor: pointer;">Capture Guide</a></p>
+          </div>
+          <div class="step">
+            <h4>3. Train</h4>
+            <pre><code>C:\Users\shade\pidev_proj\train-splat.bat "C:\photos" "C:\output"</code></pre>
+          </div>
+          <div class="step">
+            <h4>4. View</h4>
+            <pre><code>C:\Users\shade\pidev_proj\open-viewer.bat</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick actions -->
+    <section>
+      <h2><span class="icon">⚡</span> Quick Actions</h2>
+      <div class="actions">
+        <a href="https://github.com/pierotofy/OpenSplat/releases" target="_blank" class="btn btn-primary">
+          📥 Download OpenSplat
+        </a>
+        <a href="https://superspl.at/editor" target="_blank" class="btn btn-outline">
+          👁️ Open SuperSplat
+        </a>
+        <a href="https://swyvl.io/tools/gaussian-splat-viewer" target="_blank" class="btn btn-outline">
+          🌐 Swyvl Viewer
+        </a>
+        <a href="https://colmap.github.io/" target="_blank" class="btn btn-outline">
+          📐 COLMAP
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB: Capture -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="tab-content" id="tab-capture">
+
+    <section>
+      <h2><span class="icon">📸</span> Camera Setup</h2>
+      <div class="card">
+        <h3>Phone Camera Settings</h3>
+        <div class="checklist">
+          <label><input type="checkbox" checked disabled> ✅ Use any smartphone (iPhone, Pixel, Galaxy)</label>
+          <label><input type="checkbox" checked disabled> ❌ Turn OFF HDR (causes ghosting)</label>
+          <label><input type="checkbox" checked disabled> ❌ Turn OFF panorama mode</label>
+          <label><input type="checkbox" checked disabled> 🔒 Lock focus &amp; exposure</label>
+          <label><input type="checkbox"> ⚙️ ISO 100–400, Shutter ~1/60s</label>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Before You Start</h3>
+        <div class="checklist">
+          <label><input type="checkbox"> 🚪 Open all doors (all open or all closed)</label>
+          <label><input type="checkbox"> 💡 Turn on all lights</label>
+          <label><input type="checkbox"> 🚫 Remove moving objects (pets, people, fans)</label>
+          <label><input type="checkbox"> 🪟 Keep windows consistent</label>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">📷</span> How to Capture</h2>
+      <div class="card">
+        <h3>For Each Room</h3>
+        <ol style="padding-left: 1.2rem; color: var(--text-dim);">
+          <li style="margin-bottom: 0.4rem;">Enter the doorway — take 10–15 photos facing in</li>
+          <li style="margin-bottom: 0.4rem;">Walk the perimeter — continuous path, 60–70% overlap</li>
+          <li style="margin-bottom: 0.4rem;">Capture at multiple heights — standing + crouching</li>
+          <li style="margin-bottom: 0.4rem;">Move to center and take more photos</li>
+          <li style="margin-bottom: 0.4rem;">Pause at doorways between rooms for overlap</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">📊</span> Photo Count Guide</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Room</th><th>Photos</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Small bedroom</td><td>50–75</td></tr>
+            <tr><td>Large bedroom</td><td>75–100</td></tr>
+            <tr><td>Kitchen</td><td>100–150</td></tr>
+            <tr><td>Living room</td><td>150–200</td></tr>
+            <tr><td>Bathroom</td><td>75–100</td></tr>
+            <tr><td>Hallway</td><td>25–50</td></tr>
+            <tr style="font-weight: 700; color: var(--accent-light);"><td>Total (typical house)</td><td>300–500</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">🎥</span> Video Capture (Easier)</h2>
+      <div class="card">
+        <p>Instead of stopping for each photo, record video while walking:</p>
+        <ol style="padding-left: 1.2rem; color: var(--text-dim); margin-top: 0.5rem;">
+          <li>Enable 4K video on your phone</li>
+          <li>Walk slowly through each room</li>
+          <li>Maintain consistent overlap — don't rush</li>
+          <li>Capture at multiple heights</li>
+        </ol>
+        <pre style="background: #0d0d18; border: 1px solid var(--card-border); border-radius: 8px; padding: 0.8rem 1rem; margin-top: 0.8rem; font-size: 0.85rem; color: var(--green); font-family: var(--font-mono);">
+# Extract frames from video (4 FPS)
+extract-frames.bat "C:\video.mp4" "C:\frames"</pre>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">⚠️</span> Common Problems</h2>
+      <div class="card">
+        <h3>White Wall Problem</h3>
+        <p>Plain walls have no texture → COLMAP can't compute positions → holes in reconstruction.</p>
+        <p><strong>Solution:</strong> Hold newspaper/cardboard in front of blank walls, or capture from many angles.</p>
+      </div>
+      <div class="card">
+        <h3>Ghosting / Blurring</h3>
+        <p>Usually caused by HDR mode or moving objects.</p>
+        <p><strong>Solution:</strong> Turn off HDR, remove people/pets/fans, re-capture.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB: Hardware -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="tab-content" id="tab-hardware">
+
+    <section>
+      <h2><span class="icon">🖥️</span> Your System</h2>
+      <div class="status-grid">
+        <div class="status-item">
+          <div class="label">GPU</div>
+          <div class="value green">RTX 5060 12GB</div>
+        </div>
+        <div class="status-item">
+          <div class="label">Architecture</div>
+          <div class="value green">Blackwell (SM 12.0)</div>
+        </div>
+        <div class="status-item">
+          <div class="label">CPU</div>
+          <div class="value green">Ryzen 7 3800x</div>
+        </div>
+        <div class="status-item">
+          <div class="label">RAM</div>
+          <div class="value green">32 GB</div>
+        </div>
+        <div class="status-item">
+          <div class="label">OS</div>
+          <div class="value green">Windows 11</div>
+        </div>
+        <div class="status-item">
+          <div class="label">VRAM Usage</div>
+          <div class="value orange">~6–12 GB</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">📈</span> Hardware Comparison</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Component</th><th>Minimum</th><th>Recommended</th><th>Large House</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>GPU</td><td>RTX 3060 6 GB</td><td>RTX 3080 12 GB</td><td>RTX 4090 24 GB</td></tr>
+            <tr><td>VRAM</td><td>6 GB</td><td>12 GB</td><td>24 GB</td></tr>
+            <tr><td>RAM</td><td>16 GB</td><td>32 GB</td><td>64 GB</td></tr>
+            <tr><td>Storage</td><td>30 GB SSD</td><td>60 GB SSD</td><td>200 GB NVMe</td></tr>
+            <tr><td>CUDA</td><td>11.8+</td><td>12.x</td><td>12.x</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">⏱️</span> Training Times</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>GPU</th><th>Time (300–500 photos)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>RTX 4090 24 GB</td><td>25–40 min</td></tr>
+            <tr><td>RTX 3090 24 GB</td><td>45–55 min</td></tr>
+            <tr style="background: rgba(108, 92, 231, 0.08); font-weight: 600;"><td>RTX 5060 12 GB ⚡</td><td>~45–90 min</td></tr>
+            <tr><td>RTX 3080 12 GB</td><td>60–90 min</td></tr>
+            <tr><td>RTX 3060 6 GB</td><td>90 min – 3 hrs</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 0.8rem;">* Plus 20–60 minutes for <a href="https://colmap.github.io/" target="_blank" class="service-link">COLMAP</a> preprocessing (CPU-bound)</p>
+    </section>
+
+    <section>
+      <h2><span class="icon">⚠️</span> Blackwell (RTX 50 Series) Note</h2>
+      <div class="card">
+        <p>Your RTX 5060 uses <strong>Blackwell architecture (SM 12.0)</strong>, the newest NVIDIA GPU architecture.</p>
+        <p>The official 3DGS code doesn't compile for it out of the box. Use the <strong>patched versions</strong> that include Blackwell support:</p>
+        <ul style="padding-left: 1.2rem; color: var(--text-dim); margin-top: 0.5rem;">
+          <li><strong>feiyunwill/gaussian-splatting-cuda</strong> — patched INRIA with Blackwell SM 12.0 support</li>
+          <li><strong>Nerfstudio / gsplat</strong> — Blackwell support merged in mid-2025</li>
+          <li><strong>OpenSplat</strong> — multi-backend, reportedly works on Blackwell</li>
+        </ul>
+        <p style="margin-top: 0.8rem;">All our scripts handle this automatically. You just need CUDA 12.4+ installed.</p>
+        <div class="actions" style="margin-top: 0.8rem;">
+          <a href="https://github.com/feiyunwill/gaussian-splatting-cuda" target="_blank" class="btn btn-outline btn-sm">🔧 feiyunwill/gaussian-splatting-cuda</a>
+          <a href="https://github.com/nerfstudio-project/nerfstudio" target="_blank" class="btn btn-outline btn-sm">🦦 Nerfstudio</a>
+          <a href="https://github.com/pierotofy/OpenSplat" target="_blank" class="btn btn-outline btn-sm">🗂️ OpenSplat</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB: Tools -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="tab-content" id="tab-tools">
+
+    <section>
+      <h2><span class="icon">🛠️</span> Tool Comparison</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Tool</th><th>Ease</th><th>Platform</th><th>License</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr style="background: rgba(0, 230, 118, 0.06); font-weight: 600;">
+              <td>OpenSplat ⭐</td><td>⭐⭐⭐⭐⭐</td><td>All</td><td>AGPL-3.0</td><td>Single binary, easiest</td>
+            </tr>
+            <tr>
+              <td>Nerfstudio</td><td>⭐⭐⭐⭐</td><td>Win/Linux</td><td>Apache 2.0</td><td>Modular, web viewer</td>
+            </tr>
+            <tr>
+              <td>INRIA (patched)</td><td>⭐⭐⭐</td><td>Win/Linux</td><td>BSD-2</td><td>Best quality, patched for Blackwell</td>
+            </tr>
+            <tr>
+              <td>LichtFeld Studio</td><td>⭐⭐⭐⭐</td><td>Win/Linux</td><td>GPL-3.0</td><td>Training + editing</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">📦</span> Installed Files</h2>
+      <div class="card">
+        <h3>📁 C:\Users\shade\pidev_proj\</h3>
+        <ul style="list-style: none; padding: 0; color: var(--text-dim);">
+          <li style="padding: 0.3rem 0;">📄 <strong>README.md</strong> — Main documentation</li>
+          <li style="padding: 0.3rem 0;">📄 <strong>QUICK-START.md</strong> — Quick reference guide</li>
+          <li style="padding: 0.3rem 0;">📄 <strong>capture-guide.md</strong> — How to photograph your house</li>
+          <li style="padding: 0.3rem 0;">🟦 <strong>install-nerfstudio.bat</strong> — Python + Nerfstudio installer</li>
+          <li style="padding: 0.3rem 0;">🟦 <strong>train-splat.bat</strong> — Train the 3DGS model</li>
+          <li style="padding: 0.3rem 0;">🟦 <strong>extract-frames.bat</strong> — Extract frames from phone video</li>
+          <li style="padding: 0.3rem 0;">🟦 <strong>open-viewer.bat</strong> — Open result in browser viewer</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">🔄</span> Pipeline</h2>
+      <div class="card" style="text-align: center; font-family: var(--font-mono); font-size: 0.9rem; color: var(--green); padding: 2rem;">
+        Photos<br>
+        ↓<br>
+        <span style="color: var(--accent-light);">COLMAP</span> (SfM — camera positions)<br>
+        ↓<br>
+        <span style="color: var(--accent-light);">3DGS Training</span> (your GPU, 45–90 min)<br>
+        ↓<br>
+        <code>house.ply</code><br>
+        ↓<br>
+        <span style="color: var(--accent-light);">SuperSplat</span> (browser viewer)<br>
+        ↓<br>
+        🏠 Your 3D House!
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">🌐</span> Cloud Alternatives</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Service</th><th>Time</th><th>Cost</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://polycam3d.com" target="_blank" class="service-link">Polycam</a></td>
+              <td>30–60 min</td><td>Free tier</td><td>Upload photos → PLY download</td>
+            </tr>
+            <tr>
+              <td><a href="https://lumalabs.ai" target="_blank" class="service-link">Luma AI</a></td>
+              <td>30–60 min</td><td>Free tier</td><td>Video or photos → PLY</td>
+            </tr>
+            <tr>
+              <td><a href="https://splat3d.com" target="_blank" class="service-link">Splat3D</a></td>
+              <td>~10 min</td><td>100 free credits</td><td>No account needed</td>
+            </tr>
+            <tr>
+              <td><a href="https://www.runpod.io" target="_blank" class="service-link">RunPod</a></td>
+              <td>45–90 min</td><td>~$0.20/hr</td><td>Self-hosted cloud GPU</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB: View -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="tab-content" id="tab-viewer">
+
+    <section>
+      <h2><span class="icon">👁️</span> Browser Viewers (No Install)</h2>
+      <div class="card">
+        <h3>SuperSplat ⭐ (PlayCanvas / Cesium)</h3>
+        <p>Best all-around viewer and editor. Drag-and-drop PLY files.</p>
+        <p><strong>Features:</strong> Region selection, translate/rotate/scale, publish shareable links, WebGPU support</p>
+        <div class="actions">
+          <a href="https://superspl.at/editor" target="_blank" class="btn btn-primary btn-sm">Open Editor</a>
+          <a href="https://github.com/playcanvas/supersplat" target="_blank" class="btn btn-outline btn-sm">GitHub</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Swyvl</h3>
+        <p>Simple, fast viewer. No upload required.</p>
+        <div class="actions">
+          <a href="https://swyvl.io/tools/gaussian-splat-viewer" target="_blank" class="btn btn-outline btn-sm">Open Viewer</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Polyvia3D</h3>
+        <p>Quick preview, loads fast.</p>
+        <div class="actions">
+          <a href="https://polyvia3d.com/splat-viewer/ply" target="_blank" class="btn btn-outline btn-sm">Open Viewer</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">💻</span> Desktop Viewers</h2>
+      <div class="card">
+        <h3>SuperSplat Desktop App</h3>
+        <p>Full editing capabilities — region selection, brush tools, export to PLY/SPZ.</p>
+        <div class="actions" style="margin-top: 0.5rem;">
+          <a href="https://superspl.at/app" target="_blank" class="btn btn-outline btn-sm">📥 Download</a>
+          <a href="https://github.com/playcanvas/supersplat" target="_blank" class="btn btn-outline btn-sm">🐙 GitHub</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>LichtFeld Studio</h3>
+        <p>Integrated training, inspection, and editing. More user-friendly.</p>
+        <div class="actions" style="margin-top: 0.5rem;">
+          <a href="https://github.com/MrNeRF/LichtFeld-Studio" target="_blank" class="btn btn-outline btn-sm">🐙 GitHub</a>
+          <a href="https://lichtfeld.io" target="_blank" class="btn btn-outline btn-sm">🌐 lichtfeld.io</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>SIBR Viewer</h3>
+        <p>Official INRIA real-time OpenGL viewer with VR support.</p>
+        <div class="actions" style="margin-top: 0.5rem;">
+          <a href="https://gitlabpages.inria.fr/graphdeco/sibr_viewers" target="_blank" class="btn btn-outline btn-sm">🐙 GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">🌍</span> Embed on Web</h2>
+      <div class="card">
+        <p>Once you have your PLY file, embed your 3D house on any website:</p>
+        <pre style="background: #0d0d18; border: 1px solid var(--card-border); border-radius: 8px; padding: 0.8rem 1rem; margin-top: 0.8rem; font-size: 0.85rem; color: var(--green); font-family: var(--font-mono); line-height: 1.6;">
+&lt;script type="module" src="https://unpkg.com/@playcanvas/supersplat-js"&gt;&lt;/script&gt;
+&lt;super-splat-model src="house.ply" /&gt;</pre>
+        <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 0.5rem;">~45 KB gzipped, ~10 lines of code, works on mobile</p>
+        <div class="actions" style="margin-top: 0.8rem;">
+          <a href="https://playcanvas.github.io/supersplat-js/" target="_blank" class="btn btn-outline btn-sm">📖 Docs</a>
+          <a href="https://github.com/playcanvas/supersplat-js" target="_blank" class="btn btn-outline btn-sm">🐙 GitHub</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB: Formats -->
+  <!-- ═══════════════════════════════════════ -->
+  <div class="tab-content" id="tab-formats">
+
+    <section>
+      <h2><span class="icon">📦</span> Output Formats</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Format</th><th>Size (1M Gaussians)</th><th>Quality</th><th>Best For</th></tr>
+          </thead>
+          <tbody>
+            <tr style="background: rgba(108, 92, 231, 0.06); font-weight: 600;">
+              <td>PLY (raw)</td><td>180–250 MB</td><td>Full</td><td>Archival, editing</td>
+            </tr>
+            <tr>
+              <td>SPZ (compressed)</td><td>~16 MB</td><td>Preserved</td><td>Web delivery ⭐</td>
+            </tr>
+            <tr>
+              <td>SPLAT</td><td>32 MB</td><td>No color</td><td>Legacy viewers</td>
+            </tr>
+            <tr>
+              <td>SOG (Spark.js)</td><td>~6 MB</td><td>Best compression</td><td>Mobile/web delivery</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">🏠</span> House File Sizes</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Space</th><th>Gaussians</th><th>PLY</th><th>SPZ</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Single room</td><td>0.3–0.8M</td><td>60–200 MB</td><td>5–15 MB</td></tr>
+            <tr><td>Apartment (60 m²)</td><td>1–2M</td><td>200–500 MB</td><td>15–40 MB</td></tr>
+            <tr style="background: rgba(0, 230, 118, 0.06); font-weight: 600;">
+              <td>Full house</td><td>2–4M</td><td>500 MB–1.2 GB</td><td>40–90 MB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">📊</span> 3DGS vs Photogrammetry</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>3D Gaussian Splatting</th><th>Photogrammetry</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Best for</td><td>Photorealistic walkthroughs</td><td>Measurement-accurate floor plans</td></tr>
+            <tr><td>Capture time</td><td>15–30 min</td><td>60+ min</td></tr>
+            <tr><td>Real-time render</td><td>60–100+ FPS</td><td>Standard</td></tr>
+            <tr><td>Editable mesh</td><td>No</td><td>Yes</td></tr>
+            <tr><td>Measurement accuracy</td><td>~7.8 cm</td><td>1–3 cm</td></tr>
+            <tr><td>File size</td><td>10–40 MB (SPZ)</td><td>20 MB (optimized mesh)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="icon">💡</span> Compression Pipeline</h2>
+      <div class="details">
+        <summary>Step-by-step optimization (click to expand)</summary>
+        <div class="details-content">
+          <p><strong>Step 1:</strong> Start with full PLY from training (~200–500 MB)</p>
+          <p><strong>Step 2:</strong> Open in SuperSplat editor and remove floaters/artifacts</p>
+          <p><strong>Step 3:</strong> Export compressed PLY (SH0 — ~30% smaller)</p>
+          <p><strong>Step 4:</strong> Convert to SPZ format (~90% smaller, preserved quality)</p>
+          <p><strong>Step 5:</strong> Share via SuperSplat link or embed on website</p>
+          <pre style="background: #0d0d18; border: 1px solid var(--card-border); border-radius: 8px; padding: 0.8rem 1rem; margin-top: 0.8rem; font-size: 0.85rem; color: var(--green); font-family: var(--font-mono); line-height: 1.6;">
+Full PLY (200 MB) → Compressed PLY (60 MB) → SPZ (16 MB)</pre>
+        <div class="actions" style="margin-top: 0.8rem;">
+          <a href="https://polyvia3d.com/splat-converter" target="_blank" class="btn btn-outline btn-sm">🔄 PLY → SPZ Converter</a>
+          <a href="https://superspl.at/editor" target="_blank" class="btn btn-outline btn-sm">✂️ SuperSplat Editor</a>
+          <a href="https://github.com/PlayCanvas/spark" target="_blank" class="btn btn-outline btn-sm">⚡ Spark.js SOG</a>
+        </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <p>3D Gaussian Splatting — Windows 11 Setup Guide</p>
+    <p style="margin-top: 0.3rem;">Skadoosh • RTX 5060 12GB • Ryzen 7 3800x • 32 GB RAM</p>
+  </footer>
+
+</div>
+
+<script>
+  function showTab(name) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    // Show selected
+    document.getElementById('tab-' + name).classList.add('active');
+    // Highlight button
+    const tabs = ['setup', 'capture', 'hardware', 'tools', 'viewer', 'formats'];
+    const idx = tabs.indexOf(name);
+    document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Save checkbox state to localStorage
+  document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      localStorage.setItem('3dgs_' + cb.textContent.trim().substring(0, 30), cb.checked);
+    });
+    // Restore state
+    const saved = localStorage.getItem('3dgs_' + cb.textContent.trim().substring(0, 30));
+    if (saved === 'true') cb.checked = true;
+  });
+</script>
+
+</body>
+</html>
