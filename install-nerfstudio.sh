@@ -32,6 +32,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# Validate required arguments (if not using defaults)
 echo "=== Nerfstudio Installation Script ==="
 echo "Virtual environment: $VENV_PATH"
 echo "Nerfstudio source: $NERFSTUDIO_SOURCE"
