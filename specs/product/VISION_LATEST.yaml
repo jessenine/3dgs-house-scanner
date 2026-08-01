@@ -1,0 +1,19 @@
+# Project Vision
+
+## Mission
+Enable users to create high-fidelity 3D Gaussian Splatting maps of houses from photos or video, supporting both cloud-hosted and local processing workflows.
+
+## Goals
+- **Immediate**: Cloud-based processing for users without local GPU
+- **Medium-term**: Local processing on RTX 5060 (Blackwell) for full control
+- **Long-term**: Support for 2D floor plan extraction from 3D models
+
+## Success Metrics
+- Users can upload photos and get a ready-to-view 3D map in <60 minutes (cloud)
+- Users can train locally on RTX 5060 in <90 minutes with 12GB VRAM
+- Output supports web viewing via SuperSplat and embeddable formats
+
+## Non-Goals
+- Mobile app development
+- Real-time capture (post-processing only)
+- Commercial hosting services (tooling only)

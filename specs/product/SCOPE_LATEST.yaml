@@ -1,0 +1,22 @@
+# Project Scope
+
+## In Scope
+- PowerShell scripts for frame extraction (with relative path support)
+- Batch files as fallback (with SmartScreen workaround)
+- Nerfstudio integration with cu126 for Blackwell GPU support
+- Web front-end (index.html) with tool comparison and workflow guidance
+- Documentation (README-POWERSHELL.md, capture-guide.md)
+- GitHub repository for distribution
+
+## Out of Scope
+- Mobile application
+- Desktop GUI wrappers
+- Commercial hosting/processing service
+- Real-time capture pipeline
+- 2D floor plan extraction (future phase)
+
+## Constraints
+- Windows 10/11 host systems
+- Local processing: RTX 5060 12GB VRAM minimum
+- Cloud processing: Any browser with upload capability
+- Video format: MP4, MOV, AVI

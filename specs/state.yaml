@@ -1,0 +1,26 @@
+# State
+
+## Workflow Mode
+solo-git
+
+## Active Flow
+discover (no active task)
+
+## Git State
+- Branch: main
+- Commit: (unset)
+- Changes: (none)
+
+## Epic State
+- Active Epic: (none)
+- Completed Epics: (none)
+- Blocked Epics: (none)
+
+## Handoff
+- Previous Skill: (none)
+- Next Skill: scope-work
+- Reviewer: (none)
+
+## Metrics
+- Session Start: (unset)
+- Cycle Time: (unset)

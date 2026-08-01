@@ -1,0 +1,23 @@
+# Release Plan
+
+## Target Version
+v1.0.0 — Initial release
+
+## Epics
+| ID | Title | WSJF | Notes |
+|----|-------|------|-------|
+| e01 | PowerShell frame extraction | 10 | Support relative paths, error handling |
+| e02 | Nerfstudio integration | 10 | cu126 for Blackwell, full pipeline |
+| e03 | Web front-end | 8 | Tool comparison, workflow guidance |
+| e04 | Documentation | 7 | PowerShell guide, capture instructions |
+| e05 | GitHub distribution | 5 | Repository setup, release workflow |
+
+## Milestones
+- **M1 (Current)**: Extract-frames.ps1 with relative path support ✅
+- **M2**: Complete Nerfstudio PowerShell pipeline
+- **M3**: Web front-end published
+- **M4**: All documentation complete
+- **M5**: GitHub release ready
+
+## Blocking Issues
+None

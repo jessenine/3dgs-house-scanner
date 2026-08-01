@@ -1,0 +1,45 @@
+# GLOSSARY
+
+## Core Concepts
+
+### 3D Gaussian Splatting (3DGS)
+A novel rendering technique that represents 3D scenes as a collection of Gaussian distributions. Each "splat" contains position, color, and opacity data, allowing for real-time rendering with photorealistic quality.
+
+### Splatfacto
+A specific 3DGS model implementation in Nerfstudio that optimizes Gaussian splats from input images. Trains in 45-90 minutes for full house models.
+
+### COLMAP
+Structure-from-Motion (SfM) software that automatically extracts camera poses and sparse point clouds from images. Used internally by Nerfstudio for preprocessing.
+
+### SuperSplat
+Web-based viewer/editor for Gaussian splat models. Supports .ply and .spz formats, runs entirely in browser.
+
+## File Formats
+
+### .ply
+Stanford Polygon Library format. Raw 3D point cloud with vertices and colors. Large files (100-500MB).
+
+### .spz
+Compressed format for Gaussian splats. Uses spherical harmonics compression. ~90% smaller than .ply.
+
+### .sog
+Spark.js format. Optimized for web delivery. ~15x smaller than .ply.
+
+## Hardware
+
+### Blackwell Architecture
+NVIDIA GPU architecture (sm_120) used in RTX 5060. Requires patched 3DGS code with `-DCMAKE_CUDA_ARCHITECTURES="120"`.
+
+### VRAM Scaling
+3DGS memory usage: ~0.5-1 GB per 100 photos. Minimum 6GB (RTX 3060), 12GB recommended (RTX 5060), 24GB ideal (RTX 4090).
+
+## Commands
+
+### splatfacto
+Nerfstudio 3DGS model that trains Gaussian splats from images. Supports full-resolution training.
+
+### process_data
+Nerfstudio command that runs COLMAP SfM processing on input images to extract camera poses.
+
+### export
+Nerfstudio command that converts trained model to .ply format for external viewers.
