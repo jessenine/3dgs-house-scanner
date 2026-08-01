@@ -10,7 +10,7 @@ Nerfstudio Installation with cu126
 5
 
 ## Status
-Pending
+failing
 
 ## Tasks
 
@@ -26,7 +26,8 @@ Pending
   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
   pip install -e nerfstudio
   ```
-- **Status**: Pending
+- **Risk**: P1
+- **Status**: failing
 
 ### Task: COLMAP installation
 - **ID**: e02s01t02
@@ -37,16 +38,17 @@ Pending
   winget install --id COLMAP.COLMAP --accept-package-agreements
   colmap --help
   ```
-- **Status**: Pending
+- **Risk**: P2
+- **Status**: failing
 
 ## Acceptance Criteria
-- [x] Creates virtual environment with `python -m venv gs-env`
-- [x] Activates venv with `.\gs-env\Scripts\Activate.ps1`
-- [x] Upgrades pip, setuptools, wheel
-- [x] Installs PyTorch with cu126 (Windows wheels available)
-- [x] Installs Nerfstudio in editable mode
-- [x] Installs COLMAP via winget
-- [x] Verifies Blackwell GPU detection
+- [ ] Creates virtual environment with `python -m venv gs-env`
+- [ ] Activates venv with `.\gs-env\Scripts\Activate.ps1`
+- [ ] Upgrades pip, setuptools, wheel
+- [ ] Installs PyTorch with cu126 (Windows wheels available)
+- [ ] Installs Nerfstudio in editable mode
+- [ ] Installs COLMAP via winget
+- [ ] Verifies Blackwell GPU detection
 
 ## Notes
 - cu126 is the only Windows-compatible CUDA version accessible via pip index

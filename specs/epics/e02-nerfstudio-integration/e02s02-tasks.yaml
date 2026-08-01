@@ -10,7 +10,7 @@ Full PowerShell Pipeline (Process → Train → Export)
 6
 
 ## Status
-Pending
+failing
 
 ## Tasks
 
@@ -26,7 +26,8 @@ Pending
   Test-Path C:\output\data\images
   Test-Path C:\output\data\sparse
   ```
-- **Status**: Pending
+- **Risk**: P1
+- **Status**: failing
 
 ### Task: Train model script
 - **ID**: e02s02t02
@@ -40,7 +41,8 @@ Pending
     --max-num-iterations 1000 `
     --load-config ""
   ```
-- **Status**: Pending
+- **Risk**: P1
+- **Status**: failing
 
 ### Task: Export PLY script
 - **ID**: e02s02t03
@@ -53,15 +55,16 @@ Pending
   # Verify output
   Test-Path C:\output\point_cloud\iteration_30000\point_cloud.ply
   ```
-- **Status**: Pending
+- **Risk**: P2
+- **Status**: failing
 
 ## Acceptance Criteria
-- [x] Process data script accepts input/output paths
-- [x] Process creates COLMAP sparse point cloud and camera poses
-- [x] Train script runs splatfacto model
-- [x] Export creates PLY file with correct path structure
-- [x] All scripts handle errors with clear messages
-- [x] Documentation in README-POWERSHELL.md
+- [ ] Process data script accepts input/output paths
+- [ ] Process creates COLMAP sparse point cloud and camera poses
+- [ ] Train script runs splatfacto model
+- [ ] Export creates PLY file with correct path structure
+- [ ] All scripts handle errors with clear messages
+- [ ] Documentation in README-POWERSHELL.md
 
 ## Notes
 - Full training takes 45-90 minutes for 300-500 photos

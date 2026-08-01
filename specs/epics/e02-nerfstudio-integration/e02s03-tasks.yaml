@@ -10,7 +10,7 @@ Blackwell GPU Compatibility Verification
 4
 
 ## Status
-Pending
+failing
 
 ## Tasks
 
@@ -25,7 +25,8 @@ Pending
   # Test GPU detection
   python -c "import torch; print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"N/A\"}')"
   ```
-- **Status**: Pending
+- **Risk**: P0
+- **Status**: failing
 
 ### Task: VRAM testing
 - **ID**: e02s03t02
@@ -38,7 +39,8 @@ Pending
   # Test with 300 photos (should fit in 12GB VRAM)
   python -m nerfstudio.scripts.process_data C:\photos C:\output --data-type images
   ```
-- **Status**: Pending
+- **Risk**: P1
+- **Status**: failing
 
 ### Task: Performance validation
 - **ID**: e02s03t03
@@ -51,14 +53,15 @@ Pending
   $end = Get-Date
   Write-Host "Training time: $(( $end - $start ).TotalMinutes) minutes"
   ```
-- **Status**: Pending
+- **Risk**: P2
+- **Status**: failing
 
 ## Acceptance Criteria
-- [x] Blackwell GPU (RTX 5060) detected by PyTorch
-- [x] CUDA 12.6 with Windows wheels available
-- [x] VRAM sufficient for 300-500 photo models (12GB)
-- [x] Training completes in 45-90 minutes
-- [x] Output quality meets user expectations
+- [ ] Blackwell GPU (RTX 5060) detected by PyTorch
+- [ ] CUDA 12.6 with Windows wheels available
+- [ ] VRAM sufficient for 300-500 photo models (12GB)
+- [ ] Training completes in 45-90 minutes
+- [ ] Output quality meets user expectations
 
 ## Notes
 - sm_120 (compute capability 12.0) = Blackwell architecture

@@ -8,14 +8,14 @@ Integrate Nerfstudio for 3D Gaussian Splatting training with cu126 support for B
 - **WSJF**: 10
 - **Status**: In Progress
 - **Story Count**: 3
-- **Total BCPs**: 12
+- **Total BCPs**: 15
 
 ## Stories
 | Story ID | Title | BCPs | Status |
 |----------|-------|------|--------|
-| e02s01 | Nerfstudio installation with cu126 | 5 | Pending |
-| e02s02 | Full PowerShell pipeline (process → train → export) | 6 | Pending |
-| e02s03 | Blackwell GPU compatibility verification | 4 | Pending |
+| e02s01 | Nerfstudio installation with cu126 | 5 | failing |
+| e02s02 | Full PowerShell pipeline (process → train → export) | 6 | failing |
+| e02s03 | Blackwell GPU compatibility verification | 4 | failing |
 
 ## Delivery
 - **Install**: `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126`
@@ -46,3 +46,12 @@ python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}, GPU: {torch.
 - cu121 and cu124 lack Windows wheels accessible via pip
 - 12GB VRAM sufficient for 300-500 photo house models
 - Training time: 45-90 minutes for full house
+
+## Implementation Files
+- `e02s01-nerfstudio-installation.md` - Installation script and verification
+- `e02s02-full-pipeline.md` - End-to-end pipeline commands
+- `e02s03-blackwell-verification.md` - GPU verification and troubleshooting
+
+## Allure Integration
+- Epic severity: high (P0 tasks require critical verification)
+- Categories: "Installation", "Pipeline", "GPU", "Blackwell", "Windows"
