@@ -1,11 +1,12 @@
 # Execution Status
 
 ## Overall Status
-completed (epic e02 complete, ready for M3: web front-end)
+planning (e06: Cloud upload integration in progress)
 
 ## Epic Status
 | Epic ID | Title | Status | Progress | BCPs |
 |---------|-------|--------|----------|------|
+| e06 | Cloud upload integration | In Progress | 0% | 18 |
 | e01 | PowerShell frame extraction | Complete | 100% | 6 |
 | e02 | Nerfstudio integration | Complete | 100% | 12 |
 | e03 | Web front-end | Complete | 100% | 5 |
@@ -15,6 +16,9 @@ completed (epic e02 complete, ready for M3: web front-end)
 ## Story Status
 | Story ID | Epic | Title | Status |
 |----------|------|-------|--------|
+| e06s01 | e06 | Cloud service API integration | Failing |
+| e06s02 | e06 | PowerShell upload tool | Failing |
+| e06s03 | e06 | Progress tracking | Failing |
 | e01s01 | e01 | PowerShell script for frame extraction | Complete |
 | e01s02 | e01 | Batch file fallback with SmartScreen workaround | Complete |
 | e02s01 | e02 | Nerfstudio installation with cu126 | Complete |

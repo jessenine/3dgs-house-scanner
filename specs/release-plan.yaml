@@ -1,11 +1,12 @@
 # Release Plan
 
 ## Target Version
-v1.0.0 — Initial release
+v1.1.0 — Cloud upload integration (epic e06)
 
 ## Epics
 | ID | Title | WSJF | Notes |
 |----|-------|------|-------|
+| e06 | Cloud upload integration | 9 | Polycam, Luma AI, Splat3D APIs |
 | e01 | PowerShell frame extraction | 10 | Support relative paths, error handling |
 | e02 | Nerfstudio integration | 10 | cu126 for Blackwell, full pipeline |
 | e03 | Web front-end | 8 | Tool comparison, workflow guidance |
@@ -15,9 +16,9 @@ v1.0.0 — Initial release
 ## Milestones
 - **M1 (Complete)**: Extract-frames.ps1 with relative path support ✅
 - **M2 (Complete)**: Complete Nerfstudio PowerShell pipeline ✅
-- **M3**: Web front-end published
-- **M4**: All documentation complete
-- **M5**: GitHub release ready
+- **M3 (Current)**: Cloud upload integration - IN PROGRESS
+- **M4**: Web-based upload form (e09)
+- **M5**: Credential manager (e10)
 
 ## Completed Epics
 | ID | Title | Status | Notes |
