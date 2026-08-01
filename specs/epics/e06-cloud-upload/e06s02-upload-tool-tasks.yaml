@@ -1,0 +1,80 @@
+# Story: PowerShell Upload Tool
+
+## Story ID
+e06s02
+
+## Title
+PowerShell Upload Tool with CLI Parameters
+
+## BCPs
+5
+
+## Status
+failing
+
+## Tasks
+
+### Task: Upload script skeleton
+- **ID**: e06s02t01
+- **Description**: Create upload.ps1 with mandatory parameters (-Service, -PhotoPath, -OutputPath)
+- **Verify**:
+  ```powershell
+  # Test script runs with correct parameters
+  .\upload.ps1 -Service polycam -PhotoPath "C:\photos" -OutputPath "C:\output"
+  ```
+- **Risk**: P2
+- **Status**: failing
+
+### Task: Service validation
+- **ID**: e06s02t02
+- **Description**: Validate service name and check required API token
+- **Verify**:
+  ```powershell
+  # Test valid service
+  .\upload.ps1 -Service invalid -PhotoPath "C:\photos" -OutputPath "C:\output" 2>&1 | Should -Contain "Invalid service"
+  
+  # Test missing token
+  .\upload.ps1 -Service polycam -PhotoPath "C:\photos" -OutputPath "C:\output" 2>&1 | Should -Contain "API token"
+  ```
+- **Risk**: P1
+- **Status**: failing
+
+### Task: Photo path validation
+- **ID**: e06s02t03
+- **Description**: Validate photo directory exists and has valid images
+- **Verify**:
+  ```powershell
+  # Test invalid path
+  .\upload.ps1 -Service polycam -PhotoPath "C:\invalid" -OutputPath "C:\output" 2>&1 | Should -Contain "not found"
+  
+  # Test no images
+  .\upload.ps1 -Service polycam -PhotoPath "C:\empty" -OutputPath "C:\output" 2>&1 | Should -Contain "No photos"
+  ```
+- **Risk**: P1
+- **Status**: failing
+
+### Task: Progress display
+- **ID**: e06s02t04
+- **Description**: Show upload percentage and estimated completion time
+- **Verify**:
+  ```powershell
+  # Test progress output
+  .\upload.ps1 -Service polycam -PhotoPath "C:\photos" -OutputPath "C:\output" | Should -Contain "Upload: 50%"
+  ```
+- **Risk**: P2
+- **Status**: failing
+
+## Acceptance Criteria
+- [ ] Script accepts -Service (polycam|luma|splat3d)
+- [ ] Script accepts -PhotoPath and -OutputPath
+- [ ] Validates service name and shows error for invalid service
+- [ ] Checks for API token and shows error if missing
+- [ ] Validates photo directory exists and contains images
+- [ ] Shows progress percentage during upload
+- [ ] Shows estimated completion time
+
+## Notes
+- Service names: polycam, luma, splat3d
+- Photo format: .jpg, .jpeg, .png
+- Photo limit: 500 photos max (service-dependent)
+- Error messages must guide users to fix issues

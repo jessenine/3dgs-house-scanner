@@ -1,0 +1,77 @@
+# Story: Progress Tracking
+
+## Story ID
+e06s03
+
+## Title
+Progress Tracking with Real-Time Updates
+
+## BCPs
+5
+
+## Status
+failing
+
+## Tasks
+
+### Task: Upload progress
+- **ID**: e06s03t01
+- **Description**: Track upload percentage for each photo
+- **Verify**:
+  ```powershell
+  # Test upload progress output
+  $progress = .\upload.ps1 -Service polycam -PhotoPath "C:\photos" -OutputPath "C:\output" | Select-String "Upload: \d+%"
+  Write-Host "Progress: $progress"
+  ```
+- **Risk**: P2
+- **Status**: failing
+
+### Task: Processing status
+- **ID**: e06s03t02
+- **Description**: Poll service API and show processing status
+- **Verify**:
+  ```powershell
+  # Test processing status
+  $status = .\upload.ps1 -Service polycam -PhotoPath "C:\photos" -OutputPath "C:\output" | Select-String "Processing: \w+"
+  Write-Host "Status: $status"
+  ```
+- **Risk**: P1
+- **Status**: failing
+
+### Task: Estimated completion
+- **ID**: e06s03t03
+- **Description**: Calculate and display estimated completion time
+- **Verify**:
+  ```powershell
+  # Test completion estimate
+  $estimate = .\upload.ps1 -Service polycam -PhotoPath "C:\photos" -OutputPath "C:\output" | Select-String "Estimated: \d+ min"
+  Write-Host "Estimate: $estimate"
+  ```
+- **Risk**: P3
+- **Status**: failing
+
+### Task: Download after processing
+- **ID**: e06s03t04
+- **Description**: Download processed .ply or .spz file automatically
+- **Verify**:
+  ```powershell
+  # Test download
+  Test-Path "C:\output\results.ply"
+  Test-Path "C:\output\results.spz"
+  ```
+- **Risk**: P1
+- **Status**: failing
+
+## Acceptance Criteria
+- [ ] Upload progress shows percentage (0-100%)
+- [ ] Processing status shows: queued, processing, completed, failed
+- [ ] Estimated completion time is displayed (e.g., "Estimated: 45 min")
+- [ ] Processed file downloaded automatically to OutputPath
+- [ ] Output files: .ply (raw) or .spz (compressed)
+- [ ] Error handling for failed processing
+
+## Notes
+- Poll interval: 30 seconds during processing
+- Max wait time: 90 minutes (then timeout)
+- Download formats: .ply (500MB-2GB), .spz (50-200MB)
+- Completion message: "Processing complete! Downloaded: C:\output\results.ply"

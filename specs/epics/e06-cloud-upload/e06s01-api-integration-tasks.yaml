@@ -1,0 +1,82 @@
+# Story: Cloud Service API Integration
+
+## Story ID
+e06s01
+
+## Title
+Cloud Service API Integration (Polycam, Luma AI, Splat3D)
+
+## BCPs
+8
+
+## Status
+failing
+
+## Tasks
+
+### Task: Polycam API integration
+- **ID**: e06s01t01
+- **Description**: Connect to Polycam API for photo upload and status polling
+- **Verify**:
+  ```powershell
+  # Test upload endpoint
+  $token = "YOUR_POLYCAM_TOKEN"
+  $response = Invoke-RestMethod -Uri "https://app.polycam.com/api/upload" -Method Post -Headers @{"Authorization"="Bearer $token"} -Body @{file=[System.IO.File]::ReadAllBytes("C:\photos\photo1.jpg")}
+  Write-Host "Upload response: $($response | ConvertTo-Json)"
+  ```
+- **Risk**: P1
+- **Status**: failing
+
+### Task: Luma AI API integration
+- **ID**: e06s01t02
+- **Description**: Connect to Luma AI API for photo upload and status polling
+- **Verify**:
+  ```powershell
+  # Test upload endpoint
+  $token = "YOUR_LUMA_TOKEN"
+  $response = Invoke-RestMethod -Uri "https://api.llama.xyz/v1/upload" -Method Post -Headers @{"Authorization"="Bearer $token"} -Body @{file=[System.IO.File]::ReadAllBytes("C:\photos\photo1.jpg")}
+  Write-Host "Upload response: $($response | ConvertTo-Json)"
+  ```
+- **Risk**: P1
+- **Status**: failing
+
+### Task: Splat3D API integration
+- **ID**: e06s01t03
+- **Description**: Connect to Splat3D API for photo upload and status polling
+- **Verify**:
+  ```powershell
+  # Test upload endpoint
+  $token = "YOUR_Splat3D_TOKEN"
+  $response = Invoke-RestMethod -Uri "https://api.splat3d.com/upload" -Method Post -Headers @{"Authorization"="Bearer $token"} -Body @{file=[System.IO.File]::ReadAllBytes("C:\photos\photo1.jpg")}
+  Write-Host "Upload response: $($response | ConvertTo-Json)"
+  ```
+- **Risk**: P2
+- **Status**: failing
+
+### Task: Status polling
+- **ID**: e06s01t04
+- **Description**: Poll all three services for processing status
+- **Verify**:
+  ```powershell
+  # Test status endpoint
+  $token = "YOUR_TOKEN"
+  $jobId = "JOB_ID_FROM_UPLOAD"
+  $response = Invoke-RestMethod -Uri "https://app.polycam.com/api/status/$jobId" -Method Get -Headers @{"Authorization"="Bearer $token"}
+  Write-Host "Status: $($response.status)"
+  ```
+- **Risk**: P1
+- **Status**: failing
+
+## Acceptance Criteria
+- [ ] Polycam API token accepted and upload succeeds
+- [ ] Luma AI API token accepted and upload succeeds
+- [ ] Splat3D API token accepted and upload succeeds
+- [ ] Status polling returns correct processing status
+- [ ] Error handling for invalid tokens
+- [ ] Error handling for service unavailable
+
+## Notes
+- API tokens must be provided via environment variable or explicit parameter
+- Rate limiting: Polycam 10 uploads/hour, Luma AI 5 uploads/hour, Splat3D 20 uploads/hour
+- File size limits: Polycam 500MB, Luma AI 1GB, Splat3D 2GB
+- Processing time: 15-60 minutes depending on service and photo count

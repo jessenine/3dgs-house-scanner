@@ -1,0 +1,40 @@
+# Epic: Cloud Upload Integration
+
+## Summary
+Direct photo upload to cloud 3DGS services (Polycam, Luma AI, Splat3D) with progress tracking and automatic download of processed 3D Gaussian splat files.
+
+## Epic Details
+- **ID**: e06
+- **WSJF**: 9 (High value for users without local GPU)
+- **Status**: In Progress
+- **Story Count**: 3
+- **Total BCPs**: 18
+
+## Stories
+| Story ID | Title | BCPs | Status |
+|----------|-------|------|--------|
+| e06s01 | Cloud service API integration | 8 | Failing |
+| e06s02 | PowerShell upload tool | 5 | Failing |
+| e06s03 | Progress tracking | 5 | Failing |
+
+## Delivery
+- **File**: upload.ps1 with -Service, -PhotoPath, -OutputPath parameters
+- **Features**: Upload, progress display, status polling, automatic download
+- **APIs**: Polycam, Luma AI, Splat3D
+
+## Verification
+```powershell
+# Test full workflow
+.\upload.ps1 -Service polycam -PhotoPath "C:\photos" -OutputPath "C:\output" -Token $token
+
+# Verify output
+Test-Path "C:\output\results.ply"
+Test-Path "C:\output\results.spz"
+```
+
+## Notes
+- API tokens required (future: e10 for credential manager)
+- Photo limit: 500 photos (service-dependent)
+- Processing time: 15-60 minutes
+- Output: .ply (raw) or .spz (compressed)
+- Web-based upload: future (e09)
